@@ -23,10 +23,11 @@ DEPS=(
 function gem_unpack() {
   gem_name=$1
   tar -xvf ${gem_name}.gem -C ${gem_name} && {
-    cd ${gem_name}
-    gunzip checksums.yaml.gz metadata.gz
-    tar -zxvf data.tar.gz
-    return $?
+    pushd ${gem_name} && {
+      gunzip checksums.yaml.gz metadata.gz
+      tar -zxvf data.tar.gz
+      popd
+    }
   }
 }
 
