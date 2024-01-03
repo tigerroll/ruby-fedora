@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 fedora:39 AS build
+FROM --platform=linux/amd64 public.ecr.aws/amazonlinux/amazonlinux:2023 AS build
 
 MAINTAINER tigerroll
 
