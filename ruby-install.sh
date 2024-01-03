@@ -20,6 +20,16 @@ DEPS=(
   "gdbm-devel"
 )
 
+function gem_unpack() {
+  gem_name=$1
+  tar -xvf ${gem_name}.gem -C ${gem_name} && {
+    cd ${gem_name}
+    gunzip checksums.yaml.gz metadata.gz
+    tar -zxvf data.tar.gz
+    return $?
+  }
+}
+
 # Install dependent packages.
 dnf install -y "${DEPS[@]}" 2>&1
 
@@ -33,20 +43,11 @@ cd /tmp && {
   curl -s https://rubygems.org/downloads/openssl-3.0.1.gem --output openssl.gem
   curl -s https://rubygems.org/downloads/digest-3.1.0.gem --output digest.gem
 
-	mkdir openssl digest
-  tar -xvf openssl.gem -C ./openssl && {
-    cd ./openssl
-    gunzip checksums.yaml.gz metadata.gz
-    tar -zxvf data.tar.gz
-    cd ../
-	}
+  mkdir openssl digest
 
-  tar -xvf digest.gem -C ./digest && {
-    cd ./digest
-    gunzip checksums.yaml.gz metadata.gz
-    tar -zxvf data.tar.gz
-    cd ../
-	}
+  gem_unpack openssl
+  gem_unpack digest
+
   rm ruby.tar.gz
 }
 
